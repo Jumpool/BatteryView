@@ -53,6 +53,7 @@ public class BatteryView extends View implements LifecycleObserver {
     private int noChargingHighColor;
 
     private int chargingSpeed;
+    private boolean isChanging = false;// 当前是否在充电
 
     private int width;
     private int height;
@@ -291,17 +292,23 @@ public class BatteryView extends View implements LifecycleObserver {
     public void setPower(int power) {
         if(mOnBatteryPowerListener != null) mOnBatteryPowerListener.onPower(currentPower);
 
-        if (power <= lowValue) {
-            powerPaint.setColor(lowColor);
-        } else if (power < mediumValue) {
-            powerPaint.setColor(mediumColor);
+        if(isChanging) {
+            powerPaint.setColor(highColor);
         } else {
-            if(runnable == null){
+            if (power <= lowValue) {
+                powerPaint.setColor(lowColor);
+            } else if (power < mediumValue) {
+                powerPaint.setColor(mediumColor);
+            } else {
                 powerPaint.setColor(noChargingHighColor);
-            }else{
-                powerPaint.setColor(highColor);
+//                if(runnable == null){
+//                    powerPaint.setColor(noChargingHighColor);
+//                }else{
+//                    powerPaint.setColor(highColor);
+//                }
             }
         }
+
 
         if(orientation == BatteryViewOrientation.HORIZONTAL_RIGHT){
             float realWidth = getHorizontalWidth(power);
@@ -357,9 +364,9 @@ public class BatteryView extends View implements LifecycleObserver {
             }
 
             currentPower = power;
-            if (powerRf != null && runnable == null) {
-                setPower(power);
-            }
+//            if (powerRf != null && runnable == null) {
+//                setPower(power);
+//            }
         }
     };
 
@@ -372,26 +379,31 @@ public class BatteryView extends View implements LifecycleObserver {
 
     // 充电动态显示
     private void startCharge() {
-        if (runnable != null) return;
-        power = currentPower;
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                power %= 100;
-                setPower(power);
-                power += chargingSpeed;
-                //延迟执行
-                mHandler.postDelayed(this, 200);
-            }
-        };
-        mHandler.post(runnable);
+        //if (runnable != null) return;
+//        power = currentPower;
+//        power %= 100;
+        isChanging = true;
+        setPower(currentPower);
+//        runnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                power %= 100;
+//                setPower(power);
+//                power += chargingSpeed;
+//                //延迟执行
+//                mHandler.postDelayed(this, 200);
+//            }
+//        };
+//        mHandler.post(runnable);
     }
 
     private void stopCharge() {
-        if (runnable != null) {
-            mHandler.removeCallbacks(runnable);
-            runnable = null;
-        }
+        isChanging = false;
+        setPower(currentPower);
+//        if (runnable != null) {
+//            mHandler.removeCallbacks(runnable);
+//            runnable = null;
+//        }
     }
 
     //    private

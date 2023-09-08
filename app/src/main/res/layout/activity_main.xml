@@ -21,6 +21,7 @@
         android:id="@+id/bv_1"
         android:layout_width="32dp"
         android:layout_height="14dp"
+        app:bv_charging_speed="0"
         app:bv_orientation="horizontal_left"
         app:bv_power_color_low="@color/low1"
         app:bv_power_color_medium="@color/medium1"
