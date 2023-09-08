@@ -20,7 +20,7 @@ repositories {
 ```
 - 在app目录下的build.gradle中添加
 ```
-implementation 'com.sjx.batteryview:BatteryView:1.0.0'
+implementation 'com.github.jumpool:BatteryView:1.0.0'
 ```
 
 #### 基本使用
